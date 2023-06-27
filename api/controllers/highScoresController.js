@@ -1,4 +1,4 @@
-'use strict';
+'use admin';
 
 var hhmmss = require('hhmmss');
 var mongoose = require('mongoose');

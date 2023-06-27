@@ -1,31 +1,24 @@
-'use strict';
+'use admin';
 
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 var failedConnections = 0;
-var autoReconnect = true;
+let autoReconnect = true;
 
-//var db_URI = 'mongodb://localhost/ElmChessDb'
-var db_URI = 'mongodb://chess_player:chess_player@ds163016.mlab.com:63016/chess-highscores';
-connect();
+let uri = `mongodb+srv://chess:${process.env.DB_PASS}@chess-cluster-0.sulrvea.mongodb.net/?retryWrites=true&w=majority`;
 
-function connect() {
-    mongoose.connect(db_URI, { useMongoClient: true });
-}
+mongoose
+    .connect(uri,{useUnifiedTopology: true, useNewUrlParser: true})
+    .then(() => console.log("DB connected!"));
 
-/** Mongoose is connected **/
-mongoose.connection.on('connected', function() {
-    console.log('Mongoose database is connected on: ' + db_URI);
-
-});
 
 /** Mongoose is disconnected--> Tries to reconnect three times, then gives up **/
 mongoose.connection.on('disconnected', function() {
     console.log('Mongoose is disconnected.');
-    if(failedConnections < 3) {
+    if(failedConnections < 3 && autoReconnect) {
         console.log('Trying to reconnect.. ');
-        connect();
+        mongoose.connect(uri,{useUnifiedTopology: true, useNewUrlParser: true});
         failedConnections++;
     }
 });

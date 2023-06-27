@@ -1,5 +1,6 @@
-'use strict';
+'use admin';
 
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var dataBase = require('./api/models/db');
@@ -10,14 +11,14 @@ var status = require('./api/models/chessboardModel');
 var port = process.env.PORT || 3000;
 
 
-// var server = app.listen(3000, function () {
-//     var host = server.address().address;
-//     host = (host === '::' ? 'localhost' : host);
-//     var port = server.address().port;
-//
-//     console.log('Listening at: http://%s:%s', host, port);
-//
-// });
+ var server = app.listen(3000, function () {
+     var host = server.address().address;
+     host = (host === '::' ? 'localhost' : host);
+     var port = server.address().port;
+
+     console.log('Listening at: http://%s:%s', host, port);
+
+ });
 
 
 
@@ -31,7 +32,6 @@ app.use(bodyParser.json());
 
 routesApi(app);
 
-app.listen(port);
 console.log("Up and running on port: " + port);
 
 

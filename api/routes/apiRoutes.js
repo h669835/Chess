@@ -1,4 +1,4 @@
-'use strict';
+'use admin';
 
 var express = require('express');
 

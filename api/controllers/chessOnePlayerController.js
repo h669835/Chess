@@ -1,4 +1,4 @@
-'use strict';
+'use admin';
 
 var mongoose = require('mongoose');
 var chessAi = require('chess-ai-kong');
