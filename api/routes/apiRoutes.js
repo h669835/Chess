@@ -17,9 +17,23 @@ module.exports = function(app) {
     /** Chess routes **/
 
     /** Player vs. Computer game mode **/
+
+     /**
+     * GET
+     * @summary This is the summary of the endpoint
+     * @return {object} 200 - success response - application/json
+     * @return {object} 400 - Bad request response
+     */
     versionRouter.route('/chess/one')
          .get(chessOnePlayerController.startNewGame);
 
+
+     /**
+     * POST
+     * @summary This is the summary of the endpoint
+     * @return {object} 200 - success response - application/json
+     * @return {object} 400 - Bad request response
+     */     
     versionRouter.route('/chess/one/moves')
         .post(chessOnePlayerController.listPosibleMoves);
 

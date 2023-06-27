@@ -13,6 +13,7 @@
     "chess.js": "^0.10.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-jsdoc-swagger": "^1.8.0",
     "hhmmss": "^1.0.0",
     "mongodb": "^5.6.0",
     "mongoose": "^5.7.5",
