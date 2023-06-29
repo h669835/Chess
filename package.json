@@ -6,6 +6,10 @@
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": "18.16.0",
+    "npm": "9.5.1"
+  },
   "author": "Anze Mur",
   "license": "ISC",
   "dependencies": {
