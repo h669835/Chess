@@ -181,7 +181,7 @@ exports.move = function(req, res) {
                 if(move != null) {
 
                     movesArr.push(move.san);
-                    ChessGame.update({ game_id: gameId },
+                    ChessGame.updateOne({ game_id: gameId },
                         {
                          chess: chess.fen() ,
                                 chess_moves: movesArr
@@ -369,7 +369,7 @@ exports.undoLastMove = function(req, res){
             if(succes != null) {
                 movesArr.pop();
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: movesArr
@@ -410,7 +410,7 @@ exports.resetBoard = function(req, res){
             var chess = new Chess(currentGame.chess);
             chess.reset();
 
-            ChessGame.update({ game_id: gameId },
+            ChessGame.updateOne({ game_id: gameId },
                 {
                  chess: chess.fen()
                 },
@@ -446,7 +446,7 @@ exports.clearBoard = function(req, res){
             var chess = new Chess(currentGame.chess);
             chess.clear();
 
-            ChessGame.update({ game_id: gameId },
+            ChessGame.updateOne({ game_id: gameId },
                 {
                  chess: chess.fen()
                 },
@@ -484,7 +484,7 @@ exports.loadFenOverCurrent = function(req, res){
 
                 chess.load(fenString);
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: []
@@ -529,7 +529,7 @@ exports.loadPgnOverCurrent = function(req, res){
 
             if(valid) {
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: []

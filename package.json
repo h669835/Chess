@@ -9,6 +9,7 @@
   "author": "Anze Mur",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.2.0",
     "chess-ai-kong": "^0.3.3",
     "chess.js": "^0.10.2",
     "dotenv": "^16.3.1",
@@ -19,6 +20,7 @@
     "mongoose": "^5.7.5",
     "mongose": "0.0.2-security",
     "parse-seconds": "^1.0.0",
-    "swagger-tools": "^0.10.3"
+    "swagger-tools": "^0.10.3",
+    "winston": "^3.9.0"
   }
 }

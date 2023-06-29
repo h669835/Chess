@@ -11,6 +11,8 @@ var player = require('./api/models/playerModel');
 var status = require('./api/models/chessboardModel');
 var port = process.env.PORT || 3000;
 
+const logger = require("./logger");
+
 const options = {
   info: {
     version: '1.0.0',
@@ -35,8 +37,7 @@ expressJSDocSwagger(app)(options);
      var host = server.address().address;
      host = (host === '::' ? 'localhost' : host);
      var port = server.address().port;
-
-     console.log('Listening at: http://%s:%s', host, port);
+     logger.info(`Listening at http://${host}:${port}`)
 
  });
 
@@ -58,7 +59,6 @@ app.use(bodyParser.json());
 
 routesApi(app);
 
-console.log("Up and running on port: " + port);
 
 
 

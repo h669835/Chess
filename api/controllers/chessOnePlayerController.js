@@ -1,9 +1,21 @@
 'use admin';
 
+const logger = require("../../logger");
+
 var mongoose = require('mongoose');
 var chessAi = require('chess-ai-kong');
 var Chess = require('chess.js').Chess;
 // var chess = null;
+
+
+chessAi.setOptions(
+    {
+      depth: 2,
+      monitor: false,
+      strategy: 'basic',
+      timeout: 10000
+    }
+ );
 
 var ChessGame = mongoose.model('Chess');
 var AIMoves = mongoose.model('AIMoves');
@@ -33,7 +45,8 @@ exports.startNewGame = function(req, res) {
         res.json(gameStatus);
     });
 
-    // printChessboard();
+    logger.debug(`Started new singleplayer game! Game_id: ${gameId}`)
+    printChessboard();
 
 };
 
@@ -64,9 +77,12 @@ exports.startNewGameWithFEN = function(req, res) {
             res.json(gameStatus);
         });
 
-        // printChessboard();
+        logger.debug(`Started new singleplayer game from FEN! Game_id: ${gameId}`)
+
+        printChessboard();
 
     } else {
+        logger.debug(`Invalid FEN string given! ${fenString}`)
         status.status = "error: invalid FEN string!";
         res.json(status);
 
@@ -100,9 +116,11 @@ exports.startNewGameWithPgn = function(req, res) {
             res.json(gameStatus);
         });
 
-        // printChessboard();
+        logger.debug(`Started new singleplayer game from PGN! Game_id: ${gameId}`)
+        printChessboard();
 
     } else {
+        logger.debug(`Invalid PGN string given! ${pgnString}`)
         status.status = "error: invalid pgn string!";
         res.json(status);
 
@@ -153,7 +171,8 @@ exports.listPosibleMoves = function(req, res) {
 
         }
 
-        // printChessboard(chess);
+        logger.debug(`Listing possible moves for game: ${gameId}`)
+        printChessboard(chess);
     });
 
 
@@ -181,7 +200,7 @@ exports.move = function(req, res) {
                 if(move != null) {
 
                     movesArr.push(move.san);
-                    ChessGame.update({ game_id: gameId },
+                    ChessGame.updateOne({ game_id: gameId },
                         {
                          chess: chess.fen() ,
                                 chess_moves: movesArr
@@ -195,7 +214,7 @@ exports.move = function(req, res) {
                             res.json(status);
                     });
 
-                    // printChessboard(chess);
+                    printChessboard(chess);
 
                 } else {
                     status.status = "error: invalid move!";
@@ -316,7 +335,7 @@ exports.moveAI = function(req, res) {
                     movesArr.push(makeMove.san);
 
 
-                    ChessGame.update({ game_id: gameId },
+                    ChessGame.updateOne({ game_id: gameId },
                         {
                          chess: chess.fen() ,
                                 chess_moves: movesArr
@@ -334,7 +353,8 @@ exports.moveAI = function(req, res) {
                             res.json(aiMoves);
                     });
 
-                    printChessboard(chess);
+                    logger.debug(`AI move for game: ${gameId}`)
+                   printChessboard(chess);
 
                 } else {
                     status.status = "error: invalid move!";
@@ -430,7 +450,7 @@ exports.undoLastMove = function(req, res){
             if(succes != null) {
                 movesArr.pop();
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: movesArr
@@ -471,7 +491,7 @@ exports.resetBoard = function(req, res){
             var chess = new Chess(currentGame.chess);
             chess.reset();
 
-            ChessGame.update({ game_id: gameId },
+            ChessGame.updateOne({ game_id: gameId },
                 {
                  chess: chess.fen()
                 },
@@ -507,7 +527,7 @@ exports.clearBoard = function(req, res){
             var chess = new Chess(currentGame.chess);
             chess.clear();
 
-            ChessGame.update({ game_id: gameId },
+            ChessGame.updateOne({ game_id: gameId },
                 {
                  chess: chess.fen()
                 },
@@ -545,7 +565,7 @@ exports.loadFenOverCurrent = function(req, res){
 
                 chess.load(fenString);
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: []
@@ -560,7 +580,7 @@ exports.loadFenOverCurrent = function(req, res){
                         res.json(status);
                 });
 
-                // printChessboard(chess);
+                printChessboard(chess);
 
             } else {
                 status.status = "error: invalid FEN string!";
@@ -590,7 +610,7 @@ exports.loadPgnOverCurrent = function(req, res){
 
             if(valid) {
 
-                ChessGame.update({ game_id: gameId },
+                ChessGame.updateOne({ game_id: gameId },
                     {
                      chess: chess.fen(),
                      chess_moves: []
@@ -605,7 +625,7 @@ exports.loadPgnOverCurrent = function(req, res){
                         res.json(status);
                 });
 
-                // printChessboard(chess);
+                printChessboard(chess);
 
             } else {
                 status.status = "error: invalid pgn string!";
@@ -676,17 +696,19 @@ function getChess(gameId, callback) {
 
 
 function printChessboard(chess) {
-    console.log();
-    console.log("##########################################");
-    console.log();
-    console.log(chess.ascii());
+    if(process.env.MODE == "DEBUG"){
+        console.log();
+        console.log("##########################################");
+        console.log();
+        console.log(chess.ascii());
 
-    var turn = ""
-    if(chess.turn() == "w") {
-        turn = "white";
-    }  else {
-        turn = "black";
-    }
+        var turn = ""
+        if(chess.turn() == "w") {
+            turn = "white";
+        }  else {
+            turn = "black";
+        }
 
-    console.log("Turn: " + turn );
+        console.log("Turn: " + turn );
+}
 }
